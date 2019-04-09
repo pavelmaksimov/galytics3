@@ -9,6 +9,9 @@
 
 ### Установка
 ```
+# Установите эту штуку, она будет генерировать маленькие интервалы в случае семплирования.
+# без нее работать не будет
+pip install git+https://github.com/pavelmaksimov/daterangepy#egg=daterangepy-2019.4.9
 pip install git+https://github.com/pavelmaksimov/galytics3
 ```
 
