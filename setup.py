@@ -8,6 +8,6 @@ setuptools.setup(
     version=VERSION,
     description="Обертка над библиотекой google_api_python_client для работы с API Google Analytics v3",
     packages=setuptools.find_packages(),
-    install_requires=['pandas', 'google_api_python_client', 'oauth2client', 'daterangepy==2019.4.8'],
-    dependency_links=['git+https://github.com/pavelmaksimov/daterangepy#egg=daterangepy-2019.4.8']
+    install_requires=['pandas', 'google_api_python_client', 'oauth2client', 'daterangepy==2019.4.9'],
+    dependency_links=['git+https://github.com/pavelmaksimov/daterangepy#egg=daterangepy-2019.4.9']
 )
