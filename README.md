@@ -106,6 +106,3 @@ print(df)
 [Facebook](https://www.facebook.com/pavel.maksimow)
 
 Удачи тебе, друг! Поставь звездочку ;)
-
-## Другое
-- Как работает обертка [Tapioca](http://tapioca-wrapper.readthedocs.org/en/stable/quickstart.html)
