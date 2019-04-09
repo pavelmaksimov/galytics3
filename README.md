@@ -7,6 +7,11 @@
 Также если в один ответ не поместятся все строки (макс 10000 строк), 
 сделает дополнительные запросы.
 
+### Установка
+```python
+pip install git+https://github.com/pavelmaksimov/galytics3
+```
+
 ### Как пользоваться
 
 Указание авторизационных данных.
@@ -22,6 +27,7 @@ api = GoogleAnalytics(refresh_token='{refresh_token}',
                       client_id='{client_id}',
                       client_secret='{client_secret}')
 ```
+
 Вариант 2
 ```python
 from googleanalyticspy import GoogleAnalytics
