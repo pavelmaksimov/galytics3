@@ -8,7 +8,7 @@
 сделает дополнительные запросы.
 
 ### Установка
-```python
+```
 pip install git+https://github.com/pavelmaksimov/galytics3
 ```
 
