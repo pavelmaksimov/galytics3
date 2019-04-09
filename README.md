@@ -1,0 +1,105 @@
+# Обертка над стандартной библиотекой google_api_python_client для легкой работы с API Google Analytics v3
+
+Написано на версии python 3.5
+
+Умеет запрашивать данные маленькими порциями, 
+чтобы обойти семплирование. 
+Также если в один ответ не поместятся все строки (макс 10000 строк), 
+сделает дополнительные запросы.
+
+### Как пользоваться
+
+Указание авторизационных данных.
+
+Эта обертка не умеет получать токен, он у вас уже должен быть. 
+Как получить? Гуглите.
+
+Вариант 1
+```python
+from googleanalyticspy import GoogleAnalytics
+
+api = GoogleAnalytics(refresh_token='{refresh_token}',
+                      client_id='{client_id}',
+                      client_secret='{client_secret}')
+```
+Вариант 2
+```python
+from googleanalyticspy import GoogleAnalytics
+
+credentials = credentials_object
+
+api = GoogleAnalytics(credentials=credentials)
+```
+
+Вариант 3
+```python
+from googleapiclient.discovery import build
+from googleanalyticspy import GoogleAnalytics
+
+credentials = credentials_object
+service = build('analytics', 'v3', credentials=credentials_object)
+api = GoogleAnalytics(service=service)
+```
+
+#### Получаем данные
+```python
+from datetime import datetime
+from googleanalyticspy import GoogleAnalytics
+
+api = GoogleAnalytics(credentials=credentials)
+
+# Получит все аккаунты, ресурсы и представления.
+df = api.get_accounts(as_dataframe=True)
+# По умолчанию данные возвращаются в формате dataframe
+print(df)
+
+# Вернуть в JSON
+data = api.get_accounts(as_dataframe=False)
+print(data)
+
+# Получит все цели всех представлений.
+df = api.get_goals()
+print(df)
+
+# Запросить стандартный отчет
+df = api.get_report(
+    id=12345789,
+    source='GA',
+    date1=datetime(2019, 1, 1),
+    date2=datetime(2019, 1, 10),
+    dimensions=['ga:date'],
+    metrics=['ga:percentNewSessions'],
+    sort='ga:date')
+print(df)
+
+# Запросить отчет MCF
+df = api.get_report(
+    id=12345789,
+    source='mcf',
+    date1=datetime(2019, 1, 1),
+    date2=datetime(2019, 1, 10),
+    dimensions=['mcf:sourceMediumPath', 'mcf:conversionDate, mcf:source'],
+    metrics=['mcf:totalConversions', 'mcf:totalConversionValue'],
+    sort='mcf:source',
+    filters='mcf:ConversionType==Transaction')
+print(df)
+
+```
+
+
+## Зависимости
+- pandas
+- [daterangepy](https://github.com/pavelmaksimov/daterangepy)
+
+## Автор
+Павел Максимов
+
+Связаться со мной можно в 
+[Телеграм](https://t.me/pavel_maksimow) 
+и в 
+[Facebook](https://www.facebook.com/pavel.maksimow)
+
+Удачи тебе, друг! Поставь звездочку ;)
+
+## Другое
+- Как работает обертка [Tapioca](http://tapioca-wrapper.readthedocs.org/en/stable/quickstart.html)
