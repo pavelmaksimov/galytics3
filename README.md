@@ -22,7 +22,7 @@ pip install git+https://github.com/pavelmaksimov/galytics3
 Эта обертка не умеет получать токен, он у вас уже должен быть. 
 Как получить? Гуглите.
 
-Вариант 1
+##### Вариант 1
 ```python
 from googleanalyticspy import GoogleAnalytics
 
@@ -31,21 +31,25 @@ api = GoogleAnalytics(refresh_token='{refresh_token}',
                       client_secret='{client_secret}')
 ```
 
-Вариант 2
+##### Вариант 2
+Если у вас объект credential создается другим образом. 
+Через файл или еще как-то.
 ```python
 from googleanalyticspy import GoogleAnalytics
 
-credentials = credentials_object
+credentials = credentials_object  # Ваш объект credential
 
 api = GoogleAnalytics(credentials=credentials)
 ```
 
-Вариант 3
+##### Вариант 3
+Объявление дополнительных настроек, типа кеширования.
 ```python
 from googleapiclient.discovery import build
 from googleanalyticspy import GoogleAnalytics
 
-credentials = credentials_object
+credentials = credentials_object  # Ваш объект credential
+# В build можно объявить дополнительные настройки, вроде кеширования и т.д.
 service = build('analytics', 'v3', credentials=credentials_object)
 api = GoogleAnalytics(service=service)
 ```
@@ -55,7 +59,9 @@ api = GoogleAnalytics(service=service)
 from datetime import datetime
 from googleanalyticspy import GoogleAnalytics
 
-api = GoogleAnalytics(credentials=credentials)
+api = GoogleAnalytics(refresh_token='{refresh_token}',
+                      client_id='{client_id}',
+                      client_secret='{client_secret}')
 
 # Получит все аккаунты, ресурсы и представления.
 df = api.get_accounts(as_dataframe=True)
