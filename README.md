@@ -24,7 +24,7 @@ pip install git+https://github.com/pavelmaksimov/galytics3
 
 ##### Вариант 1
 ```python
-from googleanalyticspy import GoogleAnalytics
+from galytics3 import GoogleAnalytics
 
 api = GoogleAnalytics(refresh_token='{refresh_token}',
                       client_id='{client_id}',
@@ -35,7 +35,7 @@ api = GoogleAnalytics(refresh_token='{refresh_token}',
 Если у вас объект credential создается другим образом. 
 Через файл или еще как-то.
 ```python
-from googleanalyticspy import GoogleAnalytics
+from galytics3 import GoogleAnalytics
 
 credentials = credentials_object  # Ваш объект credential
 
@@ -46,7 +46,7 @@ api = GoogleAnalytics(credentials=credentials)
 Объявление дополнительных настроек, типа кеширования.
 ```python
 from googleapiclient.discovery import build
-from googleanalyticspy import GoogleAnalytics
+from galytics3 import GoogleAnalytics
 
 credentials = credentials_object  # Ваш объект credential
 # В build можно объявить дополнительные настройки, вроде кеширования и т.д.
@@ -57,7 +57,7 @@ api = GoogleAnalytics(service=service)
 #### Получаем данные
 ```python
 from datetime import datetime
-from googleanalyticspy import GoogleAnalytics
+from galytics3 import GoogleAnalytics
 
 api = GoogleAnalytics(refresh_token='{refresh_token}',
                       client_id='{client_id}',
