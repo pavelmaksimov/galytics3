@@ -23,6 +23,19 @@ def test_get_goals():
     print(r)
 
 
+def test_get_report_mcf_without_transform():
+    r = api.get_report(id=104194259,
+                       source='mcf',
+                       date1=datetime(2018, 10, 1),
+                       date2=datetime(2018, 10, 10),
+                       dimensions=['mcf:sourceMediumPath', 'mcf:conversionDate', 'mcf:ConversionType', 'mcf:source'],
+                       metrics=['mcf:totalConversions', 'mcf:totalConversionValue'],
+                       sort='mcf:source',
+                       filters='mcf:ConversionType==Transaction',
+                       is_transform_dataframe=False)
+    print(r)
+
+
 def test_get_report_mcf():
     r = api.get_report(id=104194259,
                        source='mcf',

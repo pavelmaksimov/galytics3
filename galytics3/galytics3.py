@@ -61,21 +61,25 @@ class GoogleAnalytics:
 
     def _transform_dataframe(self, df, source):
         # Дополнительная обработка, если источник данных MCF.
-        if source.lower() == 'mcf':
-            # Раскрытие вложенных столбцов.
-            df = json_normalize(df.to_dict(orient='records'))
-            # Раскрытие вложенных столбцов.
-            columns_for_parsing = [i for i in df.columns if i.find('conversionPathValue') > -1]
-            df[columns_for_parsing] = df[columns_for_parsing].applymap(lambda x: x[0])
-            data_json = df.to_dict(orient='records')
-            df = json_normalize(data_json)
+        try:
+            if source.lower() == 'mcf':
+                # Раскрытие вложенных столбцов.
+                df = json_normalize(df.to_dict(orient='records'))
+                # Раскрытие вложенных столбцов.
+                columns_for_parsing = [i for i in df.columns if i.find('conversionPathValue') > -1]
+                df[columns_for_parsing] = df[columns_for_parsing].applymap(lambda x: x[0])
+                data_json = df.to_dict(orient='records')
+                df = json_normalize(data_json)
 
-            df.columns = [i.replace('.conversionPathValue.nodeValue', '') for i in df.columns]
-            df.columns = [i.replace('.primitiveValue', '') for i in df.columns]
+                df.columns = [i.replace('.conversionPathValue.nodeValue', '') for i in df.columns]
+                df.columns = [i.replace('.primitiveValue', '') for i in df.columns]
 
-            # Преобразуется формат даты. Здесь он специфичный.
-            if 'mcf:conversionDate' in df.columns:
-                df['mcf:conversionDate'] = pd.to_datetime(df['mcf:conversionDate']).dt.strftime('%Y-%m-%d')
+                # Преобразуется формат даты. Здесь он специфичный.
+                if 'mcf:conversionDate' in df.columns:
+                    df['mcf:conversionDate'] = pd.to_datetime(df['mcf:conversionDate']).dt.strftime('%Y-%m-%d')
+        except Exception:
+            raise Exception('Возникла ошибка при трансформации dataframe. '
+                            'Вы можете выключить ее задав is_transform_dataframe=False')
 
         return df
 
@@ -223,7 +227,8 @@ class GoogleAnalytics:
     def get_report(self, id, source, date1, date2,
                    dimensions, metrics, sort=None,
                    filters=None, limit=10000, max_results=None,
-                   level_group_by_date='date', as_dataframe=True):
+                   level_group_by_date='date', as_dataframe=True,
+                   is_transform_dataframe=True):
         """
 
         :param id: int, str : идентификатор аккаунта, например "123456789"
@@ -238,6 +243,7 @@ class GoogleAnalytics:
         :param max_results: int, максимальное кол-во строк в отчете
         :param level_group_by_date: str : day|date|week|month|quarter|year
         :param as_dataframe: bool : возвращать ли в формате dataframe
+        :param is_transform_dataframe: bool : трансформировать dataframe
         :return: [..., '{данные ответа}'], dataframe
         """
         source = source.lower()
@@ -275,6 +281,8 @@ class GoogleAnalytics:
 
         if as_dataframe:
             df = self._to_df(results_list)
-            return self._transform_dataframe(df, source)
+            if is_transform_dataframe:
+                df = self._transform_dataframe(df, source)
+            return df
         else:
             return results_list
