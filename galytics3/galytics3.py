@@ -11,7 +11,7 @@ from pandas.io.json import json_normalize
 logging.basicConfig(level=logging.INFO)
 
 
-class MaxLevelSampling(Exception):
+class MaxLevelSamplingError(Exception):
     def __init__(self):
         super().__init__()
 
@@ -141,7 +141,7 @@ class GoogleAnalytics:
                 new_delta = int(delta / (sampling_level))
                 new_delta = new_delta+1 if new_delta > 1 else new_delta
                 if new_delta < 1:
-                    raise MaxLevelSampling
+                    raise MaxLevelSamplingError
 
                 # Генерируются новые конфиги с меньшим интервалом дат.
                 body_list = self._generate_body(
