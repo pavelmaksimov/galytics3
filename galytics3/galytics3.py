@@ -139,7 +139,13 @@ class GoogleAnalytics:
 
             result = self._execute(iter_body, source)
 
-            if result.get('containsSampledData'):
+            # Сначала проверяем есть ли семплирование по парамтеру в ответе.
+            # Далее проверяем есть ли семплирование на уровне строк в первой строке.
+            # И если в первой строке не обнаружено,
+            # на всяк случай во всех строках проверяется.
+            if result.get('containsSampledData') \
+                    or result.get('rows', [['']])[0][0] == '(other)' \
+                    or [i for i in result.get('rows', [['']]) if i[0] == '(other)']:
                 logging.debug('Есть семплирование')
                 # Кол-во дней в одном интервале.
                 new_delta = int(delta / (sampling_level))
@@ -152,7 +158,7 @@ class GoogleAnalytics:
                     body, date1, date2, level_group_by_date, new_delta)
                 # Интервал между датами уменьшется каждый раз в 2 раза.
                 sampling_level *= 2
-                continue
+                results_list.clear()
             else:
                 results_list.append(result)
                 # Удаляем успешно выполненый конфиг запроса из списка конфигов.
