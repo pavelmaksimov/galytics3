@@ -7,6 +7,7 @@ import pandas as pd
 from googleapiclient.discovery import build
 from oauth2client.client import GoogleCredentials
 from pandas.io.json import json_normalize
+from .decorators import retry_wrap
 
 logging.basicConfig(level=logging.INFO)
 
@@ -133,6 +134,7 @@ class GoogleAnalytics:
         body["start_index"] = next_index
         return body
 
+    @retry_wrap(retries=3, sleep=5)
     def _execute(self, body, source):
         if source.lower() == "ga":
             request_config = self.service.data().ga().get(**body)
