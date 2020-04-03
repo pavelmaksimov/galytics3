@@ -194,7 +194,9 @@ class GoogleAnalytics:
 
                 # Если получен не все данные, то добавляем еще конфиг,
                 next_page_link = result.get("nextLink")
-                if next_page_link and max_results is None:
+                next_start_index = result.get("query", {}).get("start-index")
+                count_results = next_start_index - 1 + body["max_results"]
+                if next_page_link and (not max_results or max_results > count_results):
                     next_body = self._get_next_page_body(next_page_link, iter_body)
                     body_list.append(next_body)
 
@@ -297,7 +299,7 @@ class GoogleAnalytics:
         :param dimensions: str, list
         :param sort: str
         :param filters: str
-        :param limit: int, максимальное кол-во строк в одном запросе.
+        :param limit: int, максимальное кол-во строк в одном запросе. Должно быть обязательно <= 10000.
         :param max_results: int, максимальное кол-во строк в отчете
         :param level_group_by_date: str : day|date|week|month|quarter|year
         :param as_dataframe: bool : возвращать ли в формате dataframe
@@ -307,6 +309,9 @@ class GoogleAnalytics:
         source = source.lower()
         if source not in ("ga", "mcf"):
             raise ValueError("Неизвестный источник данных {}".format(source))
+
+        if limit > 10000:
+            raise ValueError("Параметр limit должнен быть обязательно <= 10000")
 
         if isinstance(metrics, list):
             metrics = ",".join(map(str, metrics))
@@ -322,10 +327,10 @@ class GoogleAnalytics:
             start_index="1",
             samplingLevel="HIGHER_PRECISION",
         )
-        if max_results:
-            body["max_results"] = max_results
-        else:
+        if limit:
             body["max_results"] = limit
+        elif max_results:
+            body["max_results"] = max_results
 
         if sort:
             body["sort"] = sort
